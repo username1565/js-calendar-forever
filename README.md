@@ -5,3 +5,5 @@ allow to get day-name for any date.
 Really any.
 
 See tests in javascript console.
+
+Live page, online - here: https://username1565.github.io/js-calendar-forever/
