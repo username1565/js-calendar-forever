@@ -1,0 +1,153 @@
+<meta charset="utf-8">
+
+Day <input type="number" id="day">
+<br>
+Month <input type="number" id="month">
+<br>
+Year <input type="number" id="year">
+<br>
+<input type="button" onclick="show_dayname();" value="Compute day name">
+<div id="dayname_div"></div>
+
+<script>
+
+//var add_years = 4;				//XX:	+4		for XX-th century				year = year % 100;
+//var add_years = 20;				//XXI:	+20		(100 + 4) % 28 // == 20;		year = year % 100;
+  var add_years = 8;				//0-th: +8		28 - ((1900 - 4) % 28) // == 8	year = year, without mod
+
+//12 months x 28 rows
+var mods = [
+	[4, 0, 0, 3, 5, 1, 3, 6, 2, 4, 0, 2],
+	[5, 1, 1, 4, 6, 2, 4, 0, 3, 5, 1, 3],
+	[6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4],
+	[0, 3, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6],
+	[2, 5, 5, 1, 3, 6, 1, 4, 0, 2, 5, 0],
+	[3, 6, 6, 2, 4, 0, 2, 5, 1, 3, 6, 1],
+	[4, 0, 0, 3, 5, 1, 3, 6, 2, 4, 0, 2],
+	[5, 1, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4],
+	[0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5],
+	[1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6],
+	[2, 5, 5, 1, 3, 6, 1, 4, 0, 2, 5, 0],
+	[3, 6, 0, 3, 5, 1, 3, 6, 2, 4, 0, 2],
+	[5, 1, 1, 4, 6, 2, 4, 0, 3, 5, 1, 3],
+	[6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4],
+	[0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5],
+	[1, 4, 5, 1, 3, 6, 1, 4, 0, 2, 5, 0],
+	[3, 6, 6, 2, 4, 0, 2, 5, 1, 3, 6, 1],
+	[4, 0, 0, 3, 5, 1, 3, 6, 2, 4, 0, 2],
+	[5, 1, 1, 4, 6, 2, 4, 0, 3, 5, 1, 3],
+	[6, 2, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5],
+	[1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6],
+	[2, 5, 5, 1, 3, 6, 1, 4, 0, 2, 5, 0],
+	[3, 6, 6, 2, 4, 0, 2, 5, 1, 3, 6, 1],
+	[4, 0, 1, 4, 6, 2, 4, 0, 3, 5, 1, 3],
+	[6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4],
+	[0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5],
+	[1, 4, 4, 0, 2, 5, 0, 3, 6, 1, 4, 6],
+	[2, 5, 6, 2, 4, 0, 2, 5, 1, 3, 6, 1],
+];
+
+//day names array
+var days = [
+	'Sunday'
+,	'Monday'
+,	'Tuesday'
+,	'Wednesday'
+,	'Thursday'
+,	'Friday'
+,	'Saturday'
+]
+;
+
+//function to get day-name
+function dayname(
+	day		//day(number from 1 up to 31)
+,	month	//month(number from 1 up to 12)
+,	year	//year (number of year)
+){
+	year = (year - 1);		//shift year, because array have 0-th index on start
+	//year = year % 100;	//XX: +4, XXI: +20, for one century
+	
+	var row = ( year + add_years ) % 28;	//row in array
+	var column = (month-1) % 12;			//column in array
+
+	var temp = day + mods[row][column];		//add modulo to day
+	temp = (temp-1) % 7;					//get day-number
+	var day_name = days[temp];				//get day-name
+
+	//console.log(day, month, year, 'is', day_name);	//show if need
+	return day_name;	//and return day-name
+}
+
+//show day-nam in result-div, after send html-form
+function show_dayname(){
+	var day = Number(document.getElementById('day').value);			//get value of day
+	var month = Number(document.getElementById('month').value);		//get value of month
+	var year = Number(document.getElementById('year').value);		//get value of year
+	var dayname_div = document.getElementById('dayname_div');		//get element of result-div
+	
+	var day_name = dayname(day, month, year);	//get day-name
+	dayname_div.innerHTML = day_name;	//and insert this in result-div
+}
+
+console.log('XXI century: dayname(day, month, year);')
+console.log(
+		dayname(31, 12, 2099) == 'Thursday'
+	,	dayname(1, 5, 1999) == 'Saturday'
+	,	dayname(19, 2, 2023) == 'Sunday'
+);
+
+//test
+function test(){
+
+	//var date = new Date('04 Dec 1995 00:12:00 GMT');	//test XX-th century
+	//var date = new Date('04 Dec 2005 00:12:00 GMT');	//test XXI-th century
+	//var date = new Date();	//current date
+
+	var date = new Date(0);	//Thu Jan 01 1970 02:00:00 GMT+0200 (GMT+02:00) //start js-date
+	console.log('Start date: '+date);
+
+	for(var d = 0; d<100000; d++) //for each day
+	{
+		var day = date.getDate();		//get day
+		var month = date.getMonth()+1;	//get month number
+		var year = date.getFullYear();	//get year
+		
+		//show values, if need.
+	//console.log(day, month, year);
+
+		//get day, using JavaScript:
+		var day_name_js = days[date.getDay()];
+		
+		//get day, using function
+		var day_name_function = dayname(day, month, year);
+		
+		//if not equal, show error, and break from cycle
+		if(day_name_js != day_name_function){
+			console.log('error, at date: ', date);
+			console.log('it\'s javascript error, function dayname still working');
+			console.log(
+				(
+					date = new Date('Sun Feb 28 2100 02:00:00 GMT+0200 (GMT+02:00)')
+				,	new Date(date.setDate(date.getDate() + 1 /*get next day*/))
+				+ '\n'
+				+ 'BUT IT SHOULD TO BE \'Sun Feb 29 2100 02:00:00 GMT+0200 (GMT+02:00)\' '
+				+ 'because 2100-th year is leap year (2100/4 = 525)'
+				)
+			);
+			break;
+		}
+		
+		if(d%365==0){	//if year passed
+			console.log('+1 year passed');
+		}
+		
+		//add one day, to get next date
+		date = new Date(date.setDate(date.getDate() + 1));
+	}
+}
+
+//run test
+test();
+
+</script>
